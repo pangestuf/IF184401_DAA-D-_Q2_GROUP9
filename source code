@@ -101,3 +101,83 @@ int minimax(char pawn)
     }
     return result;
 }
+
+void path()
+{
+    int temp, result;
+    int x=-1,y=-1;
+    result = MIN;
+    for(int i=0;i<3;i++)
+    {
+        for(int j=0;j<3;j++)
+        {
+            if(board[i][j]==empty){
+                board[i][j] = ai;
+                temp = minimax(player);
+                if(temp > result)
+                {
+                    result = temp;
+                    x = i;
+                    y = j;
+                }
+                board[i][j] = empty;
+            }
+        }
+    }
+    board[x][y] = ai;
+    return;
+}
+
+void play()
+{
+    system("cls");
+    printf("You: X, Opponent: O\n");
+    printf("Press any key to continue...");
+    getch();
+    int score;
+    for(int i=0;i<9;i++){
+        system("cls");
+        score = score_eval();
+        if(score!=0) break;
+        if(!(i%2)){
+            debugc(board);
+            int x,y;
+            printf("Insert Row & Column: ");
+            scanf("%d %d",&x,&y);
+            x--;y--;
+            while(x>2 || y>2 || board[x][y]!=empty){
+                system("cls");
+                debugc(board);
+                printf("Invalid Input!\n");
+                printf("Insert Row & Column: ");
+                scanf("%d %d",&x,&y);
+                x--;y--;
+            }
+            board[x][y]=player;
+            system("cls");
+            debugc(board);
+            Sleep(500);
+            printf("Press any key to continue...");
+            getch();
+        }
+        else{
+            for(int k=3;k>=1;k--){
+                system("cls");
+                debugc(board);
+                printf("Please Wait...\n");
+                Sleep(1000);
+            }
+            path();
+            system("cls");
+            debugc(board);
+            Sleep(500);
+            printf("Press any key to continue...");
+            getch();
+        }
+    }
+    system("cls");
+    debugc(board);
+    if(score == -10) printf("YOU WIN!\n");
+    if(score == 10) printf("YOU LOSE!\n");
+    if(score == 0) printf("DRAW!\n");
+}
